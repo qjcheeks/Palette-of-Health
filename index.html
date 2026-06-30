@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Palette of Health Navigator</title>
+  <style>
+    :root {
+      --cream: #F7F1E8;
+      --sand: #E2D3C3;
+      --clay: #B86F53;
+      --rose: #B76E79;
+      --sage: #8FA58B;
+      --ink: #232323;
+      --muted: #6F665F;
+      --card: #FFFDF8;
+      --line: rgba(35,35,35,.12);
+      --shadow: 0 16px 40px rgba(35,35,35,.10);
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+    header {
+      padding: 18px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: rgba(247,241,232,.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+      z-index: 10;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.02em; font-size: 18px; }
+    .logo {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: conic-gradient(from 180deg, var(--clay), var(--rose), var(--sage), var(--sand), var(--clay));
+      box-shadow: inset 0 0 0 4px rgba(255,255,255,.45);
+    }
+    nav { display: flex; gap: 18px; font-size: 13px; color: var(--muted); }
+    nav a { color: inherit; text-decoration: none; transition: color .2s; }
+    nav a:hover { color: var(--ink); }
+
+    .hero {
+      padding: 48px 28px 28px;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 36px;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-flex;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,.45);
+      font-size: 12px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      margin: 0 0 16px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: .96;
+      letter-spacing: -.05em;
+    }
+    .hero > div > p {
+      font-size: 17px;
+      max-width: 580px;
+      color: var(--muted);
+      margin: 0 0 24px;
+    }
+    .search-card {
+      background: var(--card);
+      padding: 16px;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.8);
+      display: grid;
+      gap: 10px;
+    }
+    .search-row { display: grid; grid-template-columns: 1fr 140px; gap: 10px; }
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 13px 14px;
+      background: #fff;
+      font-size: 14px;
+      color: var(--ink);
+      outline: none;
+      font-family: inherit;
+      transition: border-color .2s;
+    }
+    input:focus, select:focus { border-color: var(--clay); }
+    .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .chip {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      padding: 8px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: .2s ease;
+      font-family: inherit;
+    }
+    .chip.active, .chip:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+    button.primary {
+      border: none;
+      border-radius: 14px;
+      padding: 13px 16px;
+      background: var(--ink);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
+      transition: opacity .2s;
+    }
+    button.primary:hover { opacity: .85; }
+
+    .hero-visual {
+      min-height: 440px;
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at 25% 20%, rgba(183,110,121,.65), transparent 32%),
+        radial-gradient(circle at 80% 35%, rgba(143,165,139,.65), transparent 34%),
+        radial-gradient(circle at 35% 75%, rgba(184,111,83,.62), transparent 35%),
+        linear-gradient(135deg, #F8EFE2, #D7C4B2);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      position: relative;
+    }
+    .orb {
+      width: 110px; height: 110px; border-radius: 50%;
+      background: rgba(255,255,255,.35);
+      position: absolute;
+      filter: blur(1px);
+    }
+    .orb.one { top: 36px; right: 52px; }
+    .orb.two { bottom: 72px; left: 42px; width: 150px; height: 150px; }
+    .mini-card {
+      position: relative; z-index: 1;
+      background: rgba(255,255,255,.74);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,.8);
+      border-radius: 20px;
+      padding: 16px;
+      max-width: 290px;
+      box-shadow: 0 12px 32px rgba(35,35,35,.08);
+    }
+    .mini-card h3 { margin: 0 0 5px; font-size: 16px; }
+    .mini-card p { margin: 0; font-size: 13px; color: var(--muted); }
+
+    main { max-width: 1100px; margin: 0 auto; padding: 20px 28px 60px; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin: 32px 0 16px;
+    }
+    h2 { font-family: Georgia, "Times New Roman", serif; font-size: 32px; letter-spacing: -.04em; margin: 0; }
+    .section-head > p { margin: 0; color: var(--muted); max-width: 480px; font-size: 14px; }
+
+    .results-count { font-size: 13px; color: var(--muted); margin: 0 0 14px; }
+
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(35,35,35,.08);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(35,35,35,.06);
+      transition: .2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+
+    .badge {
+      display: inline-flex;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: rgba(143,165,139,.18);
+      color: #4F664C;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+    .badge.clinical { background: rgba(183,110,121,.16); color: #7C4450; }
+    .badge.event { background: rgba(184,111,83,.16); color: #7A3E2D; }
+
+    .card h3 { margin: 0 0 7px; font-size: 19px; letter-spacing: -.02em; }
+    .card > p { margin: 0 0 14px; color: var(--muted); font-size: 13px; flex: 1; }
+
+    .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .pill { padding: 5px 8px; background: rgba(35,35,35,.06); border-radius: 999px; font-size: 11px; color: var(--muted); }
+
+    .card-action {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      font-size: 12px;
+      margin-top: auto;
+    }
+    .card-action a { color: var(--ink); font-weight: 700; text-decoration: none; }
+    .card-action a:hover { color: var(--clay); }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--muted);
+    }
+    .empty-state h3 { font-size: 20px; margin: 0 0 8px; }
+    .empty-state p { margin: 0; font-size: 14px; }
+
+    .journey { display: grid; grid-template-columns: 280px 1fr; gap: 16px; margin-top: 16px; }
+    .panel { background: var(--ink); color: #fff; border-radius: 26px; padding: 24px; }
+    .panel h3 { font-family: Georgia, "Times New Roman", serif; font-size: 26px; margin: 0 0 10px; letter-spacing: -.04em; }
+    .panel p { color: rgba(255,255,255,.72); margin: 0; font-size: 14px; }
+
+    .steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+    .step { border-radius: 22px; background: var(--card); padding: 18px; border: 1px solid var(--line); }
+    .step h3 { margin: 12px 0 6px; font-size: 16px; }
+    .step p { margin: 0; font-size: 13px; color: var(--muted); }
+    .num {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--clay); color: #fff; font-weight: 800; font-size: 14px;
+    }
+
+    .map {
+      height: 390px;
+      background:
+        linear-gradient(90deg, rgba(35,35,35,.06) 1px, transparent 1px),
+        linear-gradient(rgba(35,35,35,.06) 1px, transparent 1px);
+      background-size: 42px 42px;
+      background-color: #F1E8DD;
+      border-radius: 28px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+    .pin {
+      position: absolute;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--clay);
+      box-shadow: 0 0 0 7px rgba(184,111,83,.18);
+      cursor: pointer;
+      transition: transform .2s;
+    }
+    .pin:hover { transform: scale(1.4); }
+    .pin:nth-child(1) { left: 22%; top: 58%; }
+    .pin:nth-child(2) { left: 44%; top: 42%; background: var(--sage); box-shadow: 0 0 0 7px rgba(143,165,139,.22); }
+    .pin:nth-child(3) { left: 70%; top: 30%; background: var(--rose); box-shadow: 0 0 0 7px rgba(183,110,121,.18); }
+    .pin:nth-child(4) { left: 62%; top: 68%; background: #4E6D87; box-shadow: 0 0 0 7px rgba(78,109,135,.18); }
+    .map-label {
+      position: absolute; bottom: 18px; left: 18px;
+      background: rgba(255,255,255,.85);
+      padding: 12px 14px;
+      border-radius: 16px;
+      backdrop-filter: blur(14px);
+      max-width: 300px;
+      font-size: 13px;
+    }
+    .map-label strong { display: block; margin-bottom: 4px; }
+
+    footer { background: var(--ink); color: #fff; padding: 40px 28px; text-align: center; }
+    footer p { color: rgba(255,255,255,.66); margin: 10px auto 0; max-width: 560px; font-size: 14px; }
+
+    @media (max-width: 880px) {
+      .hero, .journey { grid-template-columns: 1fr; }
+      .grid, .steps { grid-template-columns: 1fr 1fr; }
+      nav { display: none; }
+    }
+    @media (max-width: 580px) {
+      header, .hero, main { padding-left: 16px; padding-right: 16px; }
+      .grid, .steps { grid-template-columns: 1fr; }
+      .search-row { grid-template-columns: 1fr; }
+      .hero-visual { min-height: 320px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand"><div class="logo"></div> Palette of Health</div>
+    <nav>
+      <a href="#discover">Discover</a>
+      <a href="#journey">How it works</a>
+      <a href="#map">Map</a>
+      <a href="#about">About</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Brooklyn pilot · Art × wellness × care</div>
+      <h1>Find care, calm, and creative wellbeing near you.</h1>
+      <p>A community health navigator connecting people to clinical care, arts experiences, neuroarts practices, and local wellness resources — starting in Brooklyn.</p>
+      <div class="search-card">
+        <div class="search-row">
+          <input id="searchInput" placeholder="How are you feeling? Try: stressed, lonely, curious..." />
+          <select id="locationFilter">
+            <option value="all">All Brooklyn</option>
+            <option value="Bed-Stuy">Bed-Stuy</option>
+            <option value="Crown Heights">Crown Heights</option>
+            <option value="Gowanus">Gowanus</option>
+            <option value="Prospect Park">Prospect Park</option>
+            <option value="Fort Greene">Fort Greene</option>
+            <option value="SoHo">SoHo</option>
+          </select>
+        </div>
+        <div class="chips">
+          <button class="chip active" data-filter="all">All</button>
+          <button class="chip" data-filter="stress">Reduce stress</button>
+          <button class="chip" data-filter="mental health">Mental health</button>
+          <button class="chip" data-filter="art">Arts & culture</button>
+          <button class="chip" data-filter="community">Community</button>
+          <button class="chip" data-filter="clinical">Clinical care</button>
+          <button class="chip" data-filter="music">Music & sound</button>
+        </div>
+        <button class="primary" onclick="applyFilters()">Search resources</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="orb one"></div>
+      <div class="orb two"></div>
+      <div class="mini-card">
+        <h3>Today's Art Prescription</h3>
+        <p>Practice slow looking: spend 5 uninterrupted minutes with one artwork.</p>
+      </div>
+      <div class="mini-card" style="align-self:flex-end;">
+        <h3>Neuroarts lens</h3>
+        <p>Creative experiences can support stress reduction, attention, connection, and emotional wellbeing.</p>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <div class="section-head" id="discover">
+      <div>
+        <h2>Recommended for you</h2>
+        <p>A curated mix of healthcare access, creative experiences, community wellbeing, and neuroarts practices.</p>
+      </div>
+    </div>
+    <p class="results-count" id="resultsCount"></p>
+    <div class="grid" id="cards"></div>
+
+    <div class="section-head" id="journey">
+      <div>
+        <h2>How it works</h2>
+        <p>Palette of Health helps you search by how you feel — not only by what you think you need.</p>
+      </div>
+    </div>
+    <div class="journey">
+      <div class="panel">
+        <h3>From symptoms to support.</h3>
+        <p>Bridge clinical resources with arts-based wellbeing experiences that help people feel better, connect, and navigate care.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><h3>Check in</h3><p>Start with a feeling: stressed, lonely, anxious, curious, or in need of care.</p></div>
+        <div class="step"><div class="num">2</div><h3>Discover</h3><p>Find clinical care, creative spaces, art prescriptions, and community wellness experiences.</p></div>
+        <div class="step"><div class="num">3</div><h3>Practice</h3><p>Try a simple neuroarts action: slow looking, intentional listening, movement, or reflection.</p></div>
+        <div class="step"><div class="num">4</div><h3>Reflect</h3><p>Track mood, stress, calm, and connection — and whether the experience helped.</p></div>
+      </div>
+    </div>
+
+    <div class="section-head" id="map">
+      <div>
+        <h2>Brooklyn pilot map</h2>
+        <p>Prototype view of community health resources across neighborhoods. Hover pins for more detail.</p>
+      </div>
+    </div>
+    <div class="map">
+      <div class="pin" title="Creative health — Bed-Stuy"></div>
+      <div class="pin" title="Arts in Medicine — Crown Heights"></div>
+      <div class="pin" title="Clinical care — Fort Greene"></div>
+      <div class="pin" title="Music & sound — Gowanus"></div>
+      <div class="map-label">
+        <strong>Interactive map · prototype</strong>
+        Future: filter by neighborhood, insurance, accessibility, and experience type.
+      </div>
+    </div>
+  </main>
+
+  <footer id="about">
+    <div class="brand" style="justify-content:center;"><div class="logo"></div> Palette of Health</div>
+    <p>A Portrait Studios concept exploring how art, community, and healthcare can work together to improve wellbeing.</p>
+  </footer>
+
+  <script>
+    const resources = [
+      { title: "NYC Health + Hospitals Arts in Medicine", type: "Arts in Medicine", badge: "art", neighborhood: "Citywide", description: "Community murals, exhibitions, performances, and creative programs embedded in public healthcare spaces.", tags: ["art", "community", "healthcare", "mental health"], action: "Explore program" },
+      { title: "Brooklyn Museum", type: "Museum wellness", badge: "art", neighborhood: "Crown Heights", description: "A cultural anchor for slow looking, reflection, identity, and community storytelling.", tags: ["art", "stress", "community", "slow looking"], action: "Plan a visit" },
+      { title: "Public Records", type: "Music & sound", badge: "event", neighborhood: "Gowanus", description: "A Brooklyn listening and culture space for intentional sound, music, and presence.", tags: ["music", "stress", "community", "sound"], action: "Listen deeply" },
+      { title: "Powerhouse Arts", type: "Creative making", badge: "art", neighborhood: "Gowanus", description: "A production and creative space centered on material, process, experimentation, and artistic practice.", tags: ["art", "creative", "community", "stress"], action: "Discover making" },
+      { title: "Prospect Park", type: "Nature prescription", badge: "event", neighborhood: "Prospect Park", description: "A local reset space for walking, natural sound, attention restoration, and sensory grounding.", tags: ["stress", "nature", "community", "mental health"], action: "Take a reset walk" },
+      { title: "Community mental health clinic", type: "Clinical care", badge: "clinical", neighborhood: "Bed-Stuy", description: "Placeholder listing for therapy, behavioral health support, insurance filters, and local care navigation.", tags: ["clinical", "mental health", "stress"], action: "Find care" },
+      { title: "Primary care provider", type: "Clinical care", badge: "clinical", neighborhood: "Fort Greene", description: "Placeholder listing for preventive care, annual visits, referrals, and neighborhood-based health access.", tags: ["clinical", "healthcare"], action: "Book care" },
+      { title: "Palette Practice: Slow Looking", type: "Art prescription", badge: "event", neighborhood: "Anywhere", description: "Spend five uninterrupted minutes with one artwork. Notice what changes in your attention, mood, and body.", tags: ["art", "stress", "slow looking", "mental health"], action: "Try this week" },
+      { title: "Scent of Stillness", type: "Neuroarts Lab pilot", badge: "event", neighborhood: "SoHo", description: "A sensory workshop exploring incense making, mindfulness, olfactory memory, and stress reduction — powered by Portrait Studios.", tags: ["art", "stress", "community", "creative"], action: "View concept" }
+    ];
+
+    let activeFilter = "all";
+
+    function badgeClass(badge) {
+      if (badge === "clinical") return "badge clinical";
+      if (badge === "event") return "badge event";
+      return "badge";
+    }
+
+    function renderCards(items) {
+      const cardsEl = document.getElementById("cards");
+      const countEl = document.getElementById("resultsCount");
+      countEl.textContent = items.length === resources.length
+        ? "Showing all " + items.length + " resources"
+        : items.length + " resource" + (items.length !== 1 ? "s" : "") + " found";
+
+      cardsEl.innerHTML = "";
+      if (!items.length) {
+        cardsEl.innerHTML = '<div class="empty-state"><h3>No resources found</h3><p>Try a broader feeling or clear your filters.</p></div>';
+        return;
+      }
+      items.forEach(item => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML =
+          '<span class="' + badgeClass(item.badge) + '">' + item.type + '</span>' +
+          '<h3>' + item.title + '</h3>' +
+          '<p>' + item.description + '</p>' +
+          '<div class="meta"><span class="pill">' + item.neighborhood + '</span>' +
+          item.tags.slice(0,3).map(t => '<span class="pill">' + t + '</span>').join("") + '</div>' +
+          '<div class="card-action"><span style="color:var(--muted)">Prototype listing</span><a href="#">' + item.action + ' \u2192</a></div>';
+        cardsEl.appendChild(card);
+      });
+    }
+
+    function applyFilters() {
+      const query = document.getElementById("searchInput").value.toLowerCase().trim();
+      const location = document.getElementById("locationFilter").value;
+      const filtered = resources.filter(item => {
+        const matchesFilter = activeFilter === "all" || item.tags.join(" ").includes(activeFilter) || item.type.toLowerCase().includes(activeFilter);
+        const matchesQuery = !query || (item.title + " " + item.description + " " + item.tags.join(" ")).toLowerCase().includes(query);
+        const matchesLocation = location === "all" || item.neighborhood === location || item.neighborhood === "Anywhere" || item.neighborhood === "Citywide";
+        return matchesFilter && matchesQuery && matchesLocation;
+      });
+      renderCards(filtered);
+    }
+
+    document.querySelectorAll(".chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        activeFilter = chip.dataset.filter;
+        applyFilters();
+      });
+    });
+
+    document.getElementById("searchInput").addEventListener("input", applyFilters);
+    document.getElementById("locationFilter").addEventListener("change", applyFilters);
+
+    renderCards(resources);
+  </script>
+</body>
+</html>
